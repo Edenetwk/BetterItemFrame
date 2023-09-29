@@ -1,0 +1,5 @@
+name: BetterItemFrame
+version: '${project.version}'
+main: me.capseden.optimization.BetterItemFrame
+api-version: 1.17
+folia-supported: true
