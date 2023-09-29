@@ -8,12 +8,10 @@ import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.GlowItemFrame;
-import org.bukkit.entity.Hanging;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -57,6 +55,20 @@ public final class BetterItemFrame extends JavaPlugin implements Listener {
 
         item.damage(1,player);
 
+        Location location = itemFrame.getLocation();
+        location.getWorld().playSound(itemFrame, Sound.ENTITY_SHEEP_SHEAR, SoundCategory.PLAYERS, 1f, 1f);
+
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onPlayerItemFrameChange(PlayerItemFrameChangeEvent event){
+
+        if (!event.getAction().equals(PlayerItemFrameChangeEvent.ItemFrameChangeAction.REMOVE)) return;
+
+        ItemFrame itemFrame = event.getItemFrame();
+        if (itemFrame.isVisible()) return;
+
         ItemStack dropItem;
         if (itemFrame instanceof GlowItemFrame){
             dropItem = new ItemStack(Material.GLOW_ITEM_FRAME);
@@ -65,31 +77,10 @@ public final class BetterItemFrame extends JavaPlugin implements Listener {
         }
 
         Location location = itemFrame.getLocation();
+        itemFrame.remove();
+
         location.getWorld().dropItem(location,dropItem);
 
-        location.getWorld().playSound(itemFrame, Sound.ENTITY_SHEEP_SHEAR, SoundCategory.PLAYERS, 1f, 1f);
-
-        event.setCancelled(true);
-    }
-
-    @EventHandler
-    public void onPlayerItemFrameChange(PlayerItemFrameChangeEvent event){
-        if (!event.getAction().equals(PlayerItemFrameChangeEvent.ItemFrameChangeAction.REMOVE)) return;
-        ItemFrame itemFrame = event.getItemFrame();
-        if (itemFrame.isVisible()) return;
-        itemFrame.remove();
-    }
-
-    @EventHandler
-    public void onHangingBreak(HangingBreakEvent event){
-        Hanging entity = event.getEntity();
-        if (!(entity instanceof ItemFrame itemFrame)) return;
-        if (itemFrame.isVisible()) return;
-        event.setCancelled(true);
-        Location location = entity.getLocation();
-        location.getWorld().playSound(location, Sound.ENTITY_ITEM_FRAME_BREAK, SoundCategory.NEUTRAL, 1f, 1f);
-        location.getWorld().dropItem(location,itemFrame.getItem());
-        itemFrame.remove();
     }
 
 }
