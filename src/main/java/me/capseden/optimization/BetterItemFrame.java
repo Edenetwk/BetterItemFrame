@@ -35,10 +35,12 @@ public final class BetterItemFrame extends JavaPlugin implements Listener {
 
         Material playerMainHandItemType = playerMainHandItem.getType();
         Material playerOffHandItemType = playerOffHandItem.getType();
+
+        ItemStack item;
         if (playerMainHandItemType.equals(Material.SHEARS)) {
-            playerMainHandItem.damage(1,player);
+            item = playerMainHandItem;
         } else if (playerOffHandItemType.equals(Material.SHEARS)) {
-            playerOffHandItem.damage(1,player);
+            item = playerOffHandItem;
         } else {
             return;
         }
@@ -52,6 +54,8 @@ public final class BetterItemFrame extends JavaPlugin implements Listener {
         if (itemFrameItem.getType().equals(Material.AIR)) return;
 
         itemFrame.setVisible(false);
+
+        item.damage(1,player);
 
         ItemStack dropItem;
         if (itemFrame instanceof GlowItemFrame){
