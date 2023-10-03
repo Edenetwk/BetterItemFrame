@@ -12,6 +12,7 @@ import org.bukkit.entity.Hanging;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -25,7 +26,7 @@ public final class BetterItemFrame extends JavaPlugin implements Listener {
     public void onEnable() {
         Bukkit.getPluginManager().registerEvents(this,this);
     }
-    @EventHandler
+    @EventHandler( ignoreCancelled = true, priority = EventPriority.HIGHEST )
     public void onPlayerInteract(PlayerInteractEntityEvent event){
         Player player = event.getPlayer();
         PlayerInventory inventory = player.getInventory();
@@ -72,7 +73,7 @@ public final class BetterItemFrame extends JavaPlugin implements Listener {
         event.setCancelled(true);
     }
 
-    @EventHandler
+    @EventHandler( ignoreCancelled = true, priority = EventPriority.HIGHEST )
     public void onPlayerItemFrameChange(PlayerItemFrameChangeEvent event){
         if (!event.getAction().equals(PlayerItemFrameChangeEvent.ItemFrameChangeAction.REMOVE)) return;
         ItemFrame itemFrame = event.getItemFrame();
@@ -80,7 +81,7 @@ public final class BetterItemFrame extends JavaPlugin implements Listener {
         itemFrame.remove();
     }
 
-    @EventHandler
+    @EventHandler( ignoreCancelled = true, priority = EventPriority.HIGHEST )
     public void onHangingBreak(HangingBreakEvent event){
         Hanging entity = event.getEntity();
         if (!(entity instanceof ItemFrame itemFrame)) return;
